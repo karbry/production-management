@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+{% load render_table from django_tables2 %}
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mx-5">
+    <div>
+      Zamówienie numer <b>{{order_id}}</b>
+      <br>Złożone dnia <b>{{order_time}}</b>
+      <br>Zrealizowane dnia <b>{{ complete_time|default_if_none:"--"}}</b>
+      <br>Obecny status: <b>{{order_status}}</b>
+      <br>Adres dostawy: <b>{{shipping_address}}</b>
+      <br>Przypisana osoba drukująca: <b>{{printer_operator|default_if_none:"--"}}</b>
+      {% if printer_operator == None and is_employee_printer_op %} 
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="submit" class="btn btn-outline-primary btn-sm" value="Przypisz mnie" name="assign_printer_operator">
+        </div>
+      </form>
+      {% elif printer_operator and supervisor%}
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="submit" class="btn btn-outline-primary btn-sm" {% if is_at_least_one_product_printed or is_at_least_one_product_being_packed or is_at_least_one_product_packed%}disabled{%endif%} value="Anuluj przypisanie" name="cancel_printer_operator">
+        </div>
+      </form>
+      {% endif %}
+      <br>Przypisana osoba pakująca: <b>{{packer|default_if_none:"--"}}</b>
+      {% if packer == None and is_employee_packer%} 
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="submit" class="btn btn-outline-primary btn-sm " {% if not are_all_products_printed %}disabled{%endif%} value="Przypisz mnie" name="assign_packer">
+        </div>
+      </form>
+      {% elif packer and supervisor%}
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="submit" class="btn btn-outline-primary btn-sm" {% if is_at_least_one_product_packed %}disabled{%endif%} value="Anuluj przypisanie" name="cancel_packer">
+        </div>
+      </form>
+      {% endif %}
+    </div>
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">PRODUKTY</h1>
+      <form action="" method="post">
+        {% csrf_token %}
+        {% if printer_operator %}
+        Zmień status zaznaczonych na: 
+        <div class="form-group">
+          <input type="submit"
+            {% if are_all_products_printed or is_at_least_one_product_being_packed or is_at_least_one_product_packed%}
+               class="btn btn-outline-success btn-sm" disabled
+            {%else%} class="btn btn-outline-primary btn-sm" 
+            {%endif%} value="Wydrukowane" name="product_printed">
+          {% if packer %}
+          <input type="submit"
+            {% if are_all_products_packed %}
+               class="btn btn-outline-success btn-sm" disabled
+            {%else%} class="btn btn-outline-primary btn-sm"
+            {%endif%} value="Zapakowane" name="product_packed">
+          {% endif %}
+        </div>
+        {% endif %}
+        <table id="orders" class="table table-bordered table-striped table-hover js-basic-example dataTable" style="width:100%">
+          {% render_table table %}
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  function toggle(source) {
+      checkboxes = document.getElementsByName('checkbox_column');
+      for(var i in checkboxes)
+          checkboxes[i].checked = source.checked;
+  }
+</script>
+{% endblock content %}

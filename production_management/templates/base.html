@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block title %}
+    <title>Orders</title>
+    {% endblock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.css' %}">
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="content-wrapper" class="d-flex flex-column">
+        <nav class="navbar navbar-expand-lg navbar-light shadow mb-5" style="background-color: #e3f2fd;">
+          <a class="navbar-brand" href="{% url 'orders_for_localization' %}">TapetyPL</a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'orders_for_localization' %}">Zamówienia</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">Wyposażenie</a>
+              </li>
+              {% if supervisor %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'all_orders' %}">Wszystkie zamówienia</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'employees_list' %}">Pracownicy</a>
+              </li>
+              {% endif %}
+            </ul>
+            <h6 style="margin: 10px;">Witaj, {{ user.username }}!</h6>
+            <a class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'logout' %}" role="button">Wyloguj się</a>
+          </div>
+        </nav>
+        <div class="container-fluid">
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <footer class="text-center text-lg-start bg-light text-muted">
+      <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright:
+      </div>
+    </footer>
+    </div>
+    </div>
+  </body>
+</html>

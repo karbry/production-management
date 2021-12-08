@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+{% load render_table from django_tables2 %}
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">PRACOWNICY {{ site }}</h1>
+  </div>
+  <div class="row">
+  <a class="btn btn-outline-primary my-2 my-sm-0" href="add" role="button">Dodaj</a>
+    <table id="orders" class="table table-bordered table-striped table-hover js-basic-example dataTable" style="width:100%">
+      {% render_table table %}
+    </table>
+  </div>
+</div>
+{% endblock content %}

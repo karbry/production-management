@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<style> ul
+{
+    list-style-type: none;
+} </style>
+<h4>Dodaj pracownika</h4>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-primary mb-2">Zapisz</button>
+    </form>
+{% endblock content %}
